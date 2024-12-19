@@ -49,7 +49,7 @@ npm install
 ### Basic Usage
 
 ```bash
-npx ts-node video-to-audio-converter.ts
+npx tsx video-to-audio-converter.ts
 ```
 
 

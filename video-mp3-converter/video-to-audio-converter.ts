@@ -174,7 +174,11 @@ class DirectoryVideoConverter {
         throw new Error('Not a directory');
       }
     } catch (error) {
-      throw new Error(`Invalid input directory: ${error.message}`);
+      if (error instanceof Error) {
+        throw new Error(`Invalid input directory: ${error.message}`);
+      } else {
+        throw new Error('Invalid input directory');
+      }
     }
   }
 
@@ -185,8 +189,13 @@ class DirectoryVideoConverter {
     try {
       await mkdir(directory, { recursive: true });
     } catch (error) {
-      // Ignore error if directory already exists
-      if (error.code !== 'EEXIST') {
+      // Type guard for NodeJS.ErrnoException
+      if (error instanceof Error && 'code' in error) {
+        // Ignore error if directory already exists
+        if (error.code !== 'EEXIST') {
+          throw error;
+        }
+      } else {
         throw error;
       }
     }
